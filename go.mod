@@ -3,13 +3,14 @@ module github.com/0chain/zus-cli
 go 1.23.0
 
 require (
+	github.com/0chain/errors v1.0.3
 	github.com/0chain/gosdk v1.17.9
 	github.com/spf13/cobra v1.8.1
+	github.com/spf13/viper v1.15.0
 )
 
 require (
 	github.com/0chain/common v0.0.6-0.20230127095721-8df4d1d72565 // indirect
-	github.com/0chain/errors v1.0.3 // indirect
 	github.com/Luzifer/go-openssl/v3 v3.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/btcsuite/btcd v0.23.4 // indirect
@@ -52,7 +53,6 @@ require (
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/viper v1.15.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/tinylib/msgp v1.1.6 // indirect
 	github.com/tklauser/go-sysconf v0.3.11 // indirect
@@ -80,5 +80,6 @@ require (
 	github.com/icza/bitio v1.1.0
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.5
+	gopkg.in/cheggaaa/pb.v1 v1.0.28
 )

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"github.com/0chain/gosdk/zboxcore/sdk"
 	"github.com/olekukonko/tablewriter"
@@ -17,6 +18,10 @@ func PrintJSON(v interface{}) {
 	}
 	jsonString := string(b)
 	fmt.Println(jsonString)
+}
+
+func PrintError(v ...interface{}) {
+	fmt.Fprintln(os.Stderr, v...)
 }
 
 func PrintBlobbers(nodes []*sdk.Blobber, isActive bool) {
