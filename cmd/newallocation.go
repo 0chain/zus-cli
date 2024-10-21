@@ -360,14 +360,14 @@ func storeAllocation(allocationID string) {
 
 	configDir, err := GetConfigDir()
 	if err != nil {
-		fmt.Println("error storing allocationID ", err)
+		util.PrintError("error storing allocationID ", err)
 		os.Exit(1)
 	}
 	allocFilePath := configDir + string(os.PathSeparator) + *allocationFileName
 
 	file, err := os.Create(allocFilePath)
 	if err != nil {
-		fmt.Println(err.Error())
+		util.PrintError(err.Error())
 		os.Exit(1)
 	}
 	defer file.Close()

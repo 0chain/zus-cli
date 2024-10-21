@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
+	"strconv"
 
+	"github.com/0chain/gosdk/zboxcore/fileref"
 	"github.com/0chain/gosdk/zboxcore/sdk"
 	"github.com/olekukonko/tablewriter"
 )
@@ -17,6 +20,10 @@ func PrintJSON(v interface{}) {
 	}
 	jsonString := string(b)
 	fmt.Println(jsonString)
+}
+
+func PrintError(v ...interface{}) {
+	fmt.Fprintln(os.Stderr, v...)
 }
 
 func PrintBlobbers(nodes []*sdk.Blobber, isActive bool) {
@@ -92,6 +99,43 @@ func PrintStakePoolUserInfo(info *sdk.StakePoolUserInfo) {
 			fmt.Println("    staked_at:       ", dp.StakedAt.ToTime().String())
 		}
 	}
+}
+
+func PrintListDirResult(outJson bool, ref *sdk.ListResult) {
+	if outJson {
+		PrintJSON(ref.Children)
+		return
+	}
+
+	header := []string{"Type", "Name", "Path", "Size", "Num Blocks", "Actual Size", "Actual Num Blocks", "Lookup Hash", "Is Encrypted"}
+	data := make([][]string, len(ref.Children))
+	for idx, child := range ref.Children {
+		size := strconv.FormatInt(child.Size, 10)
+		numBlocks := strconv.FormatInt(child.NumBlocks, 10)
+		actualSize := strconv.FormatInt(child.ActualSize, 10)
+		actualNumBlocks := strconv.FormatInt(child.ActualNumBlocks, 10)
+		isEncrypted := ""
+		if child.Type == fileref.FILE {
+			if len(child.EncryptionKey) > 0 {
+				isEncrypted = "YES"
+			} else {
+				isEncrypted = "NO"
+			}
+		}
+		data[idx] = []string{
+			child.Type,
+			child.Name,
+			child.Path,
+			size,
+			numBlocks,
+			actualSize,
+			actualNumBlocks,
+			child.LookupHash,
+			isEncrypted,
+		}
+	}
+
+	WriteTable(os.Stdout, header, []string{}, data)
 }
 
 // WriteTable - Writes string data as a table
