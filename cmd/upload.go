@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"os"
 	"strings"
-	"sync"
 
 	thrown "github.com/0chain/errors"
 	"github.com/0chain/gosdk/core/pathutil"
@@ -55,7 +54,7 @@ var uploadCmd = &cobra.Command{
 		webStreaming, _ := cmd.Flags().GetBool("web-streaming")
 		chunkNumber, _ := cmd.Flags().GetInt("chunknumber")
 
-		statusBar := &util.StatusBar{Wg: &sync.WaitGroup{}}
+		statusBar := util.NewStatusBar()
 		if strings.HasPrefix(remotePath, "/Encrypted") {
 			encrypt = true
 		}
@@ -122,8 +121,12 @@ func singleUpload(allocationObj *sdk.Allocation, localPath, remotePath, thumbnai
 	}
 
 	// workdir := util.GetHomeDir()
+	workdir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
 
-	return multiUploadWithOptions(allocationObj, localPath, options, statusBar)
+	return multiUploadWithOptions(allocationObj, workdir, options, statusBar)
 }
 
 func multiUploadWithOptions(allocationObj *sdk.Allocation, workdir string, options []MultiUploadOption, statusBar *util.StatusBar) error {
