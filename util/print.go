@@ -138,6 +138,27 @@ func PrintListDirResult(outJson bool, ref *sdk.ListResult) {
 	WriteTable(os.Stdout, header, []string{}, data)
 }
 
+func PrintValidators(nodes []*sdk.Validator) {
+	if len(nodes) == 0 {
+		fmt.Println("no validators registered yet")
+		return
+	}
+	for _, validator := range nodes {
+		fmt.Println("id:               ", validator.ID)
+		fmt.Println("url:              ", validator.BaseURL)
+		fmt.Println("last_health_check: ", validator.LastHealthCheck.ToTime())
+		fmt.Println("is killed:        ", validator.IsKilled)
+		fmt.Println("is shut down:     ", validator.IsShutdown)
+		fmt.Println("settings:")
+		fmt.Println("  delegate_wallet:", validator.DelegateWallet)
+		fmt.Println("  min_stake:      ", validator.MinStake)
+		fmt.Println("  max_stake:      ", validator.MaxStake)
+		fmt.Println("  total_stake:    ", validator.StakeTotal)
+		fmt.Println("  num_delegates:  ", validator.NumDelegates)
+		fmt.Println("  service_charge: ", validator.ServiceCharge*100, "%")
+	}
+}
+
 // WriteTable - Writes string data as a table
 func WriteTable(writer io.Writer, header []string, footer []string, data [][]string) {
 	table := tablewriter.NewWriter(writer)
