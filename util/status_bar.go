@@ -11,15 +11,15 @@ import (
 type StatusBar struct {
 	B *pb.ProgressBar
 	// Wg *sync.WaitGroup
-	CmdErr         chan error
-	RepairComplete chan bool
+	CmdErr chan error
+	// RepairComplete chan bool
 }
 
 func NewStatusBar(buffer int) *StatusBar {
 	return &StatusBar{
 		// Wg: &sync.WaitGroup{},
-		CmdErr:         make(chan error, buffer),
-		RepairComplete: make(chan bool),
+		CmdErr: make(chan error, buffer),
+		// RepairComplete: make(chan bool),
 	}
 }
 
@@ -82,5 +82,5 @@ func (s *StatusBar) RepairCompleted(filesRepaired int) {
 	// s.Success = true
 	// defer s.Wg.Done()
 	fmt.Println("Repair file completed, Total files repaired: ", filesRepaired)
-	s.RepairComplete <- true
+	s.CmdErr <- nil
 }
