@@ -3,7 +3,7 @@ package cmd
 import (
 	"log"
 
-	"github.com/0chain/gosdk/zboxcore/sdk"
+	"github.com/0chain/gosdk/core/transaction"
 	"github.com/0chain/zus-cli/util"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ var scConfig = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		doJSON, _ := cmd.Flags().GetBool("json")
 
-		var conf, err = sdk.GetStorageSCConfig()
+		var conf, err = transaction.GetConfig("storage_sc_config")
 		if err != nil {
 			log.Fatalf("Failed to get storage SC configurations: %v", err)
 		}
