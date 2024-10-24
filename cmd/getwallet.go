@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/0chain/gosdk/zboxcore/client"
+	"github.com/0chain/gosdk/core/client"
 	"github.com/0chain/gosdk/zboxcore/sdk"
 	"github.com/0chain/zus-cli/util"
 	"github.com/spf13/cobra"
@@ -26,11 +26,11 @@ var walletinfoCmd = &cobra.Command{
 			fmt.Println("Error getting the public key for encryption. ", err.Error())
 			return
 		}
-		data[0] = []string{client.GetClientPublicKey(), client.GetClientID(), encPubKey}
+		data[0] = []string{client.PublicKey(), client.Id(), encPubKey}
 		if doJSON {
 			j := make(map[string]string)
-			j["client_public_key"] = client.GetClientPublicKey()
-			j["client_id"] = client.GetClientID()
+			j["client_public_key"] = client.PublicKey()
+			j["client_id"] = client.Id()
 			j["encryption_public_key"] = encPubKey
 			util.PrintJSON(j)
 			return

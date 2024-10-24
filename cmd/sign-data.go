@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/0chain/gosdk/core/client"
 	"github.com/0chain/gosdk/core/encryption"
-	"github.com/0chain/gosdk/zboxcore/client"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var signCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		data, _ := cmd.Flags().GetString("data")
 		if data == "" {
-			data = client.GetClientID()
+			data = client.Id()
 		} else {
 			data = encryption.Hash(data)
 		}
