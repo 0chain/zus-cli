@@ -10,6 +10,7 @@ import (
 
 	"github.com/0chain/gosdk/zboxcore/fileref"
 	"github.com/0chain/gosdk/zboxcore/sdk"
+	"github.com/0chain/gosdk/zcncore"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -20,6 +21,14 @@ func PrintJSON(v interface{}) {
 	}
 	jsonString := string(b)
 	fmt.Println(jsonString)
+}
+
+func PrettyPrintJSON(v interface{}) {
+	b, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to convert data to json format : %v", err)
+	}
+	fmt.Println(string(b))
 }
 
 func PrintError(v ...interface{}) {
@@ -156,6 +165,23 @@ func PrintValidators(nodes []*sdk.Validator) {
 		fmt.Println("  total_stake:    ", validator.StakeTotal)
 		fmt.Println("  num_delegates:  ", validator.NumDelegates)
 		fmt.Println("  service_charge: ", validator.ServiceCharge*100, "%")
+	}
+}
+
+func PrintSharderNodes(nodes []zcncore.Node) {
+	for _, node := range nodes {
+		fmt.Println("ID:", node.Miner.ID)
+		fmt.Println("  - N2NHost:", node.Miner.N2NHost)
+		fmt.Println("  - Host:", node.Miner.Host)
+		fmt.Println("  - Port:", node.Miner.Port)
+	}
+}
+
+func PrintMinerNodes(nodes []zcncore.Node) {
+	for _, node := range nodes {
+		fmt.Println("- ID:        ", node.Miner.ID)
+		fmt.Println("- Host:      ", node.Miner.Host)
+		fmt.Println("- Port:      ", node.Miner.Port)
 	}
 }
 
