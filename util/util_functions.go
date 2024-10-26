@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
@@ -31,4 +32,9 @@ func GetHomeDir() string {
 	}
 
 	return idr
+}
+
+func ExitWithError(v ...interface{}) {
+	fmt.Fprintln(os.Stderr, v...)
+	os.Exit(1)
 }

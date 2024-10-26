@@ -43,6 +43,11 @@ var clientWallet *zcncrypto.Wallet
 var cfg conf.Config
 var network conf.Network
 
+var (
+	withoutZCNCoreCmds = make(map[*cobra.Command]bool)
+	withoutWalletCmds  = make(map[*cobra.Command]bool)
+)
+
 var rootCmd = &cobra.Command{
 	Use: "zus-cli",
 	// TODO: update Short and Long description
@@ -293,4 +298,16 @@ func initConfig() {
 	}
 
 	sdk.SetNumBlockDownloads(10)
+}
+
+// WithoutZCNCore zcncore package is unnecessary for this command. it will be asked to initialize zcncore via zcncore.Init
+func WithoutZCNCore(c *cobra.Command) *cobra.Command {
+	withoutZCNCoreCmds[c] = true
+	return c
+}
+
+// WithoutWallet wallet information is unnecessary for this command. ~/.zcn/wallet.json will not be checked
+func WithoutWallet(c *cobra.Command) *cobra.Command {
+	withoutWalletCmds[c] = true
+	return c
 }
