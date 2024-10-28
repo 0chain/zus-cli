@@ -247,10 +247,6 @@ func createConfigFile() error {
 
 func initConfig() {
 
-	// DEBUG
-	appConfigDir, _ := GetAppConfigDir()
-	fmt.Printf("DEBUG: appConfigDir = %v\n", appConfigDir)
-
 	_ = createConfigFile()
 
 	// load config
