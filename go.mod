@@ -29,6 +29,8 @@ require (
 	github.com/h2non/filetype v1.1.4-0.20231228185113-6469358c2bcb // indirect
 	github.com/hack-pad/go-webworkers v0.1.0 // indirect
 	github.com/hack-pad/safejs v0.1.1 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.5-0.20210104140557-80c98217689d // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -49,6 +51,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/remeh/sizedwaitgroup v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.3 // indirect
+	github.com/rjeczalik/notify v0.9.1 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
@@ -62,6 +65,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
+	github.com/ybbus/jsonrpc/v3 v3.1.5 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.dedis.ch/fixbuf v1.0.3 // indirect
 	go.dedis.ch/kyber/v3 v3.1.0 // indirect
