@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 
 	"github.com/0chain/gosdk/zboxcore/fileref"
@@ -29,6 +30,18 @@ func PrettyPrintJSON(v interface{}) {
 		log.Fatalf("Failed to convert data to json format : %v", err)
 	}
 	fmt.Println(string(b))
+}
+
+func PrintMap(outMap map[string]string) {
+	keys := make([]string, 0, len(outMap))
+	for k := range outMap {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		fmt.Println(k, "\t", outMap[k])
+	}
 }
 
 func PrintError(v ...interface{}) {

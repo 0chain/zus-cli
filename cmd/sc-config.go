@@ -25,7 +25,7 @@ var scConfig = &cobra.Command{
 			util.PrintJSON(conf)
 			return
 		}
-		util.PrintJSON(conf.Fields)
+		util.PrintMap(conf.Fields)
 	},
 }
 

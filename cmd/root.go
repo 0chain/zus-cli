@@ -31,6 +31,11 @@ var nonce int64
 var txFee float64
 var bSilent bool
 
+// gTxnFee is the user specified fee passed from client/user.
+// If the fee is absent/low it is adjusted to the min fee required
+// (acquired from miner) for the transaction to write into blockchain.
+var gTxnFee float64
+
 // default configuration
 //
 //go:embed config.yaml
@@ -70,6 +75,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cDir, "configDir", "", "configuration directory")
 	rootCmd.PersistentFlags().BoolVar(&bSilent, "silent", false, "(default false) Do not show interactive sdk logs (shown by default)")
 	rootCmd.PersistentFlags().Float64Var(&txFee, "fee", 0, "transaction fee for the given transaction (if unset, it will be set to blockchain min fee)")
+	rootCmd.PersistentFlags().Float64Var(&gTxnFee, "fee", 0, "transaction fee for the given transaction (if unset, it will be set to blockchain min fee)")
 }
 
 func Execute() {
@@ -310,4 +316,8 @@ func WithoutZCNCore(c *cobra.Command) *cobra.Command {
 func WithoutWallet(c *cobra.Command) *cobra.Command {
 	withoutWalletCmds[c] = true
 	return c
+}
+
+func getTxnFee() uint64 {
+	return zcncore.ConvertToValue(gTxnFee)
 }

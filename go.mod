@@ -4,13 +4,13 @@ go 1.23.0
 
 require (
 	github.com/0chain/errors v1.0.3
-	github.com/0chain/gosdk v1.18.0-RC7
+	github.com/0chain/gosdk v1.18.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.15.0
 )
 
 require (
-	github.com/0chain/common v1.18.0 // indirect
+	github.com/0chain/common v1.18.3 // indirect
 	github.com/Luzifer/go-openssl/v3 v3.1.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/btcsuite/btcd v0.23.4 // indirect
