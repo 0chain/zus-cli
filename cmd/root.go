@@ -8,7 +8,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/0chain/gosdk/core/client"
 	"github.com/0chain/gosdk/core/conf"
@@ -16,8 +15,8 @@ import (
 	"github.com/0chain/gosdk/core/zcncrypto"
 	"github.com/0chain/gosdk/zboxcore/sdk"
 	"github.com/0chain/gosdk/zcncore"
+	"github.com/0chain/zus-cli/util"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // rootCmd flags
@@ -35,11 +34,6 @@ var bSilent bool
 // If the fee is absent/low it is adjusted to the min fee required
 // (acquired from miner) for the transaction to write into blockchain.
 var gTxnFee float64
-
-// default configuration
-//
-//go:embed config.yaml
-var configStr string
 
 // wallet info
 var walletJSON string
@@ -85,39 +79,12 @@ func Execute() {
 	}
 }
 
-// returns full path of application's default configuration directory
-func GetAppConfigDir() (string, error) {
-	userConfigDir, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-	appConfigDir := userConfigDir + string(os.PathSeparator) + ".zcn"
-	return appConfigDir, nil
-}
-
-// loads and returns default configuration
-func LoadDefaultConfig() (conf.Config, error) {
-	v := viper.New()
-	v.SetConfigType("yaml")
-	err := v.ReadConfig(strings.NewReader(configStr))
-	if err != nil {
-		fmt.Println("error reading default config:", err)
-		return conf.Config{}, err
-	}
-	cfg, err := conf.LoadConfig(v)
-	if err != nil {
-		fmt.Println("error loading default config:", err)
-		return conf.Config{}, err
-	}
-	return cfg, nil
-}
-
 // returns full path of application configuration directory
 func GetConfigDir() (string, error) {
 	if len(cDir) != 0 {
 		return cDir, nil
 	}
-	appConfigDir, err := GetAppConfigDir()
+	appConfigDir, err := util.GetDefaultConfigDir()
 	if err != nil {
 		return "", err
 	}
@@ -133,8 +100,8 @@ func LoadConfig() (conf.Config, error) {
 	}
 	fmt.Println("Can't read config:", err)
 	fmt.Println("using default config")
-	fmt.Printf("config: %v", configStr)
-	cfg, err = LoadDefaultConfig()
+	fmt.Printf("config: %v", util.ConfigStr)
+	cfg, err = util.LoadDefaultConfig()
 	if err == nil {
 		return cfg, nil
 	}
@@ -227,7 +194,7 @@ func loadWallet() (*zcncrypto.Wallet, string, error) {
 
 // creates config file "config.yaml" with default configuration in user's configuration directory.
 func createConfigFile() error {
-	appConfigDir, err := GetAppConfigDir()
+	appConfigDir, err := util.GetDefaultConfigDir()
 	if err != nil {
 		fmt.Println("error getting appConfigDir :", err)
 		return err
@@ -246,7 +213,7 @@ func createConfigFile() error {
 			return err
 		}
 		defer file.Close()
-		_, err = fmt.Fprint(file, configStr)
+		_, err = fmt.Fprint(file, util.ConfigStr)
 		if err != nil {
 			fmt.Println("error writing default configuration :", err)
 			return err
@@ -259,7 +226,7 @@ func createConfigFile() error {
 func initConfig() {
 
 	// DEBUG
-	appConfigDir, _ := GetAppConfigDir()
+	appConfigDir, _ := util.GetDefaultConfigDir()
 	fmt.Printf("DEBUG: appConfigDir = %v\n", appConfigDir)
 
 	_ = createConfigFile()
