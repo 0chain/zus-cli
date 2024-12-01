@@ -1,12 +1,13 @@
 package cmd
 
 import (
+	"log"
+	"os"
+
 	"github.com/0chain/gosdk/zboxcore/sdk"
 	"github.com/0chain/gosdk/zcncore"
 	"github.com/0chain/zus-cli/util"
 	"github.com/spf13/cobra"
-	"log"
-	"os"
 )
 
 // updateAllocationCmd used to change allocation size and expiration
@@ -135,6 +136,7 @@ var updateAllocationCmd = &cobra.Command{
 				addBlobberId,
 				addBlobberAuthTicket,
 				removeBlobberId,
+				"",
 				setThirdPartyExtendable,
 				&fileOptionParams,
 				statusBar,
@@ -161,6 +163,7 @@ var updateAllocationCmd = &cobra.Command{
 				addBlobberId,
 				addBlobberAuthTicket,
 				removeBlobberId,
+				"",
 				setThirdPartyExtendable,
 				&fileOptionParams,
 			)

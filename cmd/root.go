@@ -8,7 +8,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/0chain/gosdk/core/client"
 	"github.com/0chain/gosdk/core/conf"
@@ -16,32 +15,36 @@ import (
 	"github.com/0chain/gosdk/core/zcncrypto"
 	"github.com/0chain/gosdk/zboxcore/sdk"
 	"github.com/0chain/gosdk/zcncore"
+	"github.com/0chain/zus-cli/util"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // rootCmd flags
-var cfgFile string
-var networkFile string
-var walletFile string
-var walletClientID string
-var walletClientKey string
-var cDir string
-var nonce int64
-var txFee float64
-var bSilent bool
+var (
+	cfgFile         string
+	networkFile     string
+	walletFile      string
+	walletClientID  string
+	walletClientKey string
+	cDir            string
+	nonce           int64
+	txFee           float64
+	bSilent         bool
+	// gTxnFee is the user specified fee passed from client/user.
+	// If the fee is absent/low it is adjusted to the min fee required
+	// (acquired from miner) for the transaction to write into blockchain.
+	gTxnFee float64
+)
 
-// default configuration
-//
-//go:embed config.yaml
-var configStr string
-
-// wallet info
-var walletJSON string
-var clientWallet *zcncrypto.Wallet
-
-var cfg conf.Config
-var network conf.Network
+// global var
+var (
+	withoutZCNCoreCmds = make(map[*cobra.Command]bool)
+	withoutWalletCmds  = make(map[*cobra.Command]bool)
+	walletJSON         string
+	clientWallet       *zcncrypto.Wallet
+	cfg                conf.Config
+	network            conf.Network
+)
 
 var rootCmd = &cobra.Command{
 	Use: "zus-cli",
@@ -65,6 +68,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cDir, "configDir", "", "configuration directory")
 	rootCmd.PersistentFlags().BoolVar(&bSilent, "silent", false, "(default false) Do not show interactive sdk logs (shown by default)")
 	rootCmd.PersistentFlags().Float64Var(&txFee, "fee", 0, "transaction fee for the given transaction (if unset, it will be set to blockchain min fee)")
+	rootCmd.PersistentFlags().Float64Var(&gTxnFee, "fee", 0, "transaction fee for the given transaction (if unset, it will be set to blockchain min fee)")
 }
 
 func Execute() {
@@ -74,39 +78,12 @@ func Execute() {
 	}
 }
 
-// returns full path of application's default configuration directory
-func GetAppConfigDir() (string, error) {
-	userConfigDir, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-	appConfigDir := userConfigDir + string(os.PathSeparator) + ".zcn"
-	return appConfigDir, nil
-}
-
-// loads and returns default configuration
-func LoadDefaultConfig() (conf.Config, error) {
-	v := viper.New()
-	v.SetConfigType("yaml")
-	err := v.ReadConfig(strings.NewReader(configStr))
-	if err != nil {
-		fmt.Println("error reading default config:", err)
-		return conf.Config{}, err
-	}
-	cfg, err := conf.LoadConfig(v)
-	if err != nil {
-		fmt.Println("error loading default config:", err)
-		return conf.Config{}, err
-	}
-	return cfg, nil
-}
-
 // returns full path of application configuration directory
 func GetConfigDir() (string, error) {
 	if len(cDir) != 0 {
 		return cDir, nil
 	}
-	appConfigDir, err := GetAppConfigDir()
+	appConfigDir, err := util.GetDefaultConfigDir()
 	if err != nil {
 		return "", err
 	}
@@ -122,8 +99,8 @@ func LoadConfig() (conf.Config, error) {
 	}
 	fmt.Println("Can't read config:", err)
 	fmt.Println("using default config")
-	fmt.Printf("config: %v", configStr)
-	cfg, err = LoadDefaultConfig()
+	fmt.Printf("config: %v", util.ConfigStr)
+	cfg, err = util.LoadDefaultConfig()
 	if err == nil {
 		return cfg, nil
 	}
@@ -216,7 +193,7 @@ func loadWallet() (*zcncrypto.Wallet, string, error) {
 
 // creates config file "config.yaml" with default configuration in user's configuration directory.
 func createConfigFile() error {
-	appConfigDir, err := GetAppConfigDir()
+	appConfigDir, err := util.GetDefaultConfigDir()
 	if err != nil {
 		fmt.Println("error getting appConfigDir :", err)
 		return err
@@ -235,7 +212,7 @@ func createConfigFile() error {
 			return err
 		}
 		defer file.Close()
-		_, err = fmt.Fprint(file, configStr)
+		_, err = fmt.Fprint(file, util.ConfigStr)
 		if err != nil {
 			fmt.Println("error writing default configuration :", err)
 			return err
@@ -289,4 +266,20 @@ func initConfig() {
 	}
 
 	sdk.SetNumBlockDownloads(10)
+}
+
+// WithoutZCNCore zcncore package is unnecessary for this command. it will be asked to initialize zcncore via zcncore.Init
+func WithoutZCNCore(c *cobra.Command) *cobra.Command {
+	withoutZCNCoreCmds[c] = true
+	return c
+}
+
+// WithoutWallet wallet information is unnecessary for this command. ~/.zcn/wallet.json will not be checked
+func WithoutWallet(c *cobra.Command) *cobra.Command {
+	withoutWalletCmds[c] = true
+	return c
+}
+
+func getTxnFee() uint64 {
+	return zcncore.ConvertToValue(gTxnFee)
 }
