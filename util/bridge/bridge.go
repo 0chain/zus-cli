@@ -2,7 +2,6 @@ package bridge
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/0chain/gosdk/core/conf"
@@ -47,12 +46,12 @@ type CommandWithBridge func(*zcnbridge.BridgeClient, ...*Arg)
 type Command func(...*Arg)
 
 type Option struct {
-	name         string
-	value        interface{}
-	typename     string
-	usage        string
-	missingError string
-	required     bool
+	Name         string
+	Value        interface{}
+	Typename     string
+	Usage        string
+	MissingError string
+	Required     bool
 }
 
 type Arg struct {
@@ -63,138 +62,138 @@ type Arg struct {
 
 var (
 	walletFileOption = &Option{
-		name:         OptionWalletFile,
-		value:        "wallet.json",
-		typename:     "string",
-		usage:        "Wallet file",
-		missingError: "Wallet file not specified",
-		required:     false,
+		Name:         OptionWalletFile,
+		Value:        "wallet.json",
+		Typename:     "string",
+		Usage:        "Wallet file",
+		MissingError: "Wallet file not specified",
+		Required:     false,
 	}
 
 	configFolderOption = &Option{
-		name:         OptionConfigFolder,
-		value:        getConfigDir(),
-		typename:     "string",
-		usage:        "Config home folder",
-		missingError: "Config home folder not specified",
-		required:     false,
+		Name:         OptionConfigFolder,
+		Value:        util.GetDefaultConfigDirOrExit(),
+		Typename:     "string",
+		Usage:        "Config home folder",
+		MissingError: "Config home folder not specified",
+		Required:     false,
 	}
 
 	configChainFileOption = &Option{
-		name:         OptionChainConfigFile,
-		value:        DefaultConfigChainFileName,
-		typename:     "string",
-		usage:        "Chain config file name",
-		missingError: "Chain config file name not specified",
-		required:     false,
+		Name:         OptionChainConfigFile,
+		Value:        DefaultConfigChainFileName,
+		Typename:     "string",
+		Usage:        "Chain config file name",
+		MissingError: "Chain config file name not specified",
+		Required:     false,
 	}
 )
 
 func WithRetries(usage string) *Option {
 	return &Option{
-		name:         OptionRetries,
-		value:        DefaultRetries,
-		typename:     "int",
-		usage:        usage,
-		missingError: "Retries count should be provided",
-		required:     false,
+		Name:         OptionRetries,
+		Value:        DefaultRetries,
+		Typename:     "int",
+		Usage:        usage,
+		MissingError: "Retries count should be provided",
+		Required:     false,
 	}
 }
 
 func WithToken(usage string) *Option {
 	return &Option{
-		name:         OptionToken,
-		value:        float64(0),
-		usage:        usage,
-		typename:     "float64",
-		missingError: "Token should be provided",
-		required:     true,
+		Name:         OptionToken,
+		Value:        float64(0),
+		Usage:        usage,
+		Typename:     "float64",
+		MissingError: "Token should be provided",
+		Required:     true,
 	}
 }
 
 func WithAmount(usage string) *Option {
 	return &Option{
-		name:         OptionAmount,
-		value:        int64(0),
-		usage:        usage,
-		typename:     "int64",
-		missingError: "Amount should be provided",
-		required:     true,
+		Name:         OptionAmount,
+		Value:        int64(0),
+		Usage:        usage,
+		Typename:     "int64",
+		MissingError: "Amount should be provided",
+		Required:     true,
 	}
 }
 
 func WithHash(usage string) *Option {
 	return &Option{
-		name:         OptionHash,
-		value:        "",
-		usage:        usage,
-		typename:     "string",
-		missingError: "hash of the transaction should be provided",
-		required:     true,
+		Name:         OptionHash,
+		Value:        "",
+		Usage:        usage,
+		Typename:     "string",
+		MissingError: "hash of the transaction should be provided",
+		Required:     true,
 	}
 }
 
 func GetChainConfigFile(args []*Arg) string {
-	return getString(args, OptionChainConfigFile)
+	return GetString(args, OptionChainConfigFile)
 }
 
 func GetConfigFolder(args []*Arg) string {
-	return getString(args, OptionConfigFolder)
+	return GetString(args, OptionConfigFolder)
 }
 
 func GetHash(args []*Arg) string {
-	return getString(args, OptionHash)
+	return GetString(args, OptionHash)
 }
 
 func GetAmount(args []*Arg) uint64 {
-	return uint64(getInt64(args, OptionAmount))
+	return uint64(GetInt64(args, OptionAmount))
 }
 
 func GetToken(args []*Arg) float64 {
-	return getFloat64(args, OptionToken)
+	return GetFloat64(args, OptionToken)
 }
 
 func GetRetries(args []*Arg) int {
-	return getInt(args, OptionRetries)
+	return GetInt(args, OptionRetries)
 }
 
 func GetClientID(args []*Arg) string {
-	return getString(args, OptionClientID)
+	return GetString(args, OptionClientID)
 }
 
 func GetClientKey(args []*Arg) string {
-	return getString(args, OptionClientKey)
+	return GetString(args, OptionClientKey)
 }
 
 func GetEthereumAddress(args []*Arg) string {
-	return getString(args, OptionEthereumAddress)
+	return GetString(args, OptionEthereumAddress)
 }
 
 func GetURL(args []*Arg) string {
-	return getString(args, OptionURL)
+	return GetString(args, OptionURL)
 }
 
 func GetMinStake(args []*Arg) int64 {
-	return getInt64(args, OptionMinStake)
+	return GetInt64(args, OptionMinStake)
 }
 
 func GetMaxStake(args []*Arg) int64 {
-	return getInt64(args, OptionMaxStake)
+	return GetInt64(args, OptionMaxStake)
 }
 
 func GetNumDelegates(args []*Arg) int {
-	return getInt(args, OptionNumDelegates)
+	return GetInt(args, OptionNumDelegates)
 }
 
 func GetServiceCharge(args []*Arg) float64 {
-	return getFloat64(args, OptionServiceCharge)
+	return GetFloat64(args, OptionServiceCharge)
 }
 
 func GetWalletFile(args []*Arg) string {
-	return getString(args, OptionWalletFile)
+	return GetString(args, OptionWalletFile)
 }
 
-func getString(args []*Arg, name string) string {
+func GetString(args []*Arg, name string) string {
 	if len(args) == 0 {
 		util.ExitWithError("wrong number of arguments")
 	}
@@ -210,7 +209,7 @@ func getString(args []*Arg, name string) string {
 	return ""
 }
 
-func getInt(args []*Arg, name string) int {
+func GetInt(args []*Arg, name string) int {
 	if len(args) == 0 {
 		util.ExitWithError("wrong number of arguments")
 	}
@@ -226,7 +225,7 @@ func getInt(args []*Arg, name string) int {
 	return 0
 }
 
-func getFloat64(args []*Arg, name string) float64 {
+func GetFloat64(args []*Arg, name string) float64 {
 	if len(args) == 0 {
 		util.ExitWithError("wrong number of arguments")
 	}
@@ -242,7 +241,7 @@ func getFloat64(args []*Arg, name string) float64 {
 	return 0
 }
 
-func getInt64(args []*Arg, name string) int64 {
+func GetInt64(args []*Arg, name string) int64 {
 	if len(args) == 0 {
 		util.ExitWithError("wrong number of arguments")
 	}
@@ -258,7 +257,7 @@ func getInt64(args []*Arg, name string) int64 {
 	return 0
 }
 
-func getUint64(args []*Arg, name string) uint64 {
+func GetUint64(args []*Arg, name string) uint64 {
 	if len(args) == 0 {
 		util.ExitWithError("wrong number of arguments")
 	}
@@ -274,8 +273,8 @@ func getUint64(args []*Arg, name string) uint64 {
 	return 0
 }
 
-// createCommand Function to initialize bridge commands with DRY principle
-func createCommand(use, short, long string, functor Command, hidden bool, opts ...*Option) *cobra.Command {
+// CreateCommand Function to initialize bridge commands with DRY principle
+func CreateCommand(use, short, long string, functor Command, hidden bool, opts ...*Option) *cobra.Command {
 	fn := func(parameters ...*Arg) {
 		functor(parameters...)
 	}
@@ -307,19 +306,19 @@ func CreateCommandWithBridge(use, short, long string, functor CommandWithBridge,
 
 func AppendOptions(opts []*Option, command *cobra.Command) {
 	for _, opt := range opts {
-		switch opt.typename {
+		switch opt.Typename {
 		case "string":
-			command.PersistentFlags().String(opt.name, opt.value.(string), opt.usage)
+			command.PersistentFlags().String(opt.Name, opt.Value.(string), opt.Usage)
 		case "int64":
-			command.PersistentFlags().Int64(opt.name, opt.value.(int64), opt.usage)
+			command.PersistentFlags().Int64(opt.Name, opt.Value.(int64), opt.Usage)
 		case "float64":
-			command.PersistentFlags().Float64(opt.name, opt.value.(float64), opt.usage)
+			command.PersistentFlags().Float64(opt.Name, opt.Value.(float64), opt.Usage)
 		case "int":
-			command.PersistentFlags().Int(opt.name, opt.value.(int), opt.usage)
+			command.PersistentFlags().Int(opt.Name, opt.Value.(int), opt.Usage)
 		}
 
-		if opt.required {
-			_ = command.MarkFlagRequired(opt.name)
+		if opt.Required {
+			_ = command.MarkFlagRequired(opt.Name)
 		}
 	}
 }
@@ -344,55 +343,55 @@ func createBridgeComm(
 			var parameters []*Arg
 
 			for _, opt := range opts {
-				if !fflags.Changed(opt.name) && opt.required {
+				if !fflags.Changed(opt.Name) && opt.Required {
 					//TODO: add default missing error
-					util.ExitWithError(opt.missingError)
+					util.ExitWithError(opt.MissingError)
 				}
 
 				var arg *Arg
-				switch opt.typename {
+				switch opt.Typename {
 				case "string":
-					optValue, err := fflags.GetString(opt.name)
+					optValue, err := fflags.GetString(opt.Name)
 					if err != nil {
 						util.ExitWithError(err)
 					}
 					arg = &Arg{
-						typeName:  opt.typename,
-						fieldName: opt.name,
+						typeName:  opt.Typename,
+						fieldName: opt.Name,
 						value:     optValue,
 					}
 				case "int64":
-					optValue, err := fflags.GetInt64(opt.name)
+					optValue, err := fflags.GetInt64(opt.Name)
 					if err != nil {
 						util.ExitWithError(err)
 					}
 					arg = &Arg{
-						typeName:  opt.typename,
-						fieldName: opt.name,
+						typeName:  opt.Typename,
+						fieldName: opt.Name,
 						value:     optValue,
 					}
 				case "float64":
-					optValue, err := fflags.GetFloat64(opt.name)
+					optValue, err := fflags.GetFloat64(opt.Name)
 					if err != nil {
 						util.ExitWithError(err)
 					}
 					arg = &Arg{
-						typeName:  opt.typename,
-						fieldName: opt.name,
+						typeName:  opt.Typename,
+						fieldName: opt.Name,
 						value:     optValue,
 					}
 				case "int":
-					optValue, err := fflags.GetInt(opt.name)
+					optValue, err := fflags.GetInt(opt.Name)
 					if err != nil {
 						util.ExitWithError(err)
 					}
 					arg = &Arg{
-						typeName:  opt.typename,
-						fieldName: opt.name,
+						typeName:  opt.Typename,
+						fieldName: opt.Name,
 						value:     optValue,
 					}
 				default:
-					util.ExitWithError(fmt.Printf("unknown argument: %s, value: %v\n", opt.name, opt.value))
+					util.ExitWithError(fmt.Printf("unknown argument: %s, value: %v\n", opt.Name, opt.Value))
 				}
 
 				parameters = append(parameters, arg)
@@ -410,18 +409,9 @@ func createBridgeComm(
 	return cobraCommand
 }
 
-func getConfigDir() string {
-	configDir, err := util.GetDefaultConfigDir()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	return configDir
-}
-
 func initBridge(overrideConfigFolder, overrideConfigFile string) *zcnbridge.BridgeClient {
 	var (
-		configDir           = getConfigDir()
+		configDir           = util.GetDefaultConfigDirOrExit()
 		configChainFileName = DefaultConfigChainFileName
 		logPath             = "logs"
 		loglevel            = "info"
@@ -452,7 +442,7 @@ func initBridge(overrideConfigFolder, overrideConfigFile string) *zcnbridge.Brid
 	return bridge
 }
 
-func check(cmd *cobra.Command, flags ...string) {
+func Check(cmd *cobra.Command, flags ...string) {
 	fflags := cmd.Flags()
 	for _, flag := range flags {
 		if !fflags.Changed(flag) {

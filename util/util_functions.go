@@ -45,6 +45,15 @@ func GetHomeDir() string {
 	return idr
 }
 
+func GetDefaultConfigDirOrExit() string {
+	configDir, err := GetDefaultConfigDir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	return configDir
+}
+
 // returns full path of application's default configuration directory
 func GetDefaultConfigDir() (string, error) {
 	userConfigDir, err := os.UserConfigDir()
