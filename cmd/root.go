@@ -20,31 +20,30 @@ import (
 )
 
 // rootCmd flags
-var cfgFile string
-var networkFile string
-var walletFile string
-var walletClientID string
-var walletClientKey string
-var cDir string
-var nonce int64
-var txFee float64
-var bSilent bool
+var (
+	cfgFile         string
+	networkFile     string
+	walletFile      string
+	walletClientID  string
+	walletClientKey string
+	cDir            string
+	nonce           int64
+	txFee           float64
+	bSilent         bool
+	// gTxnFee is the user specified fee passed from client/user.
+	// If the fee is absent/low it is adjusted to the min fee required
+	// (acquired from miner) for the transaction to write into blockchain.
+	gTxnFee float64
+)
 
-// gTxnFee is the user specified fee passed from client/user.
-// If the fee is absent/low it is adjusted to the min fee required
-// (acquired from miner) for the transaction to write into blockchain.
-var gTxnFee float64
-
-// wallet info
-var walletJSON string
-var clientWallet *zcncrypto.Wallet
-
-var cfg conf.Config
-var network conf.Network
-
+// global var
 var (
 	withoutZCNCoreCmds = make(map[*cobra.Command]bool)
 	withoutWalletCmds  = make(map[*cobra.Command]bool)
+	walletJSON         string
+	clientWallet       *zcncrypto.Wallet
+	cfg                conf.Config
+	network            conf.Network
 )
 
 var rootCmd = &cobra.Command{
@@ -224,10 +223,6 @@ func createConfigFile() error {
 }
 
 func initConfig() {
-
-	// DEBUG
-	appConfigDir, _ := util.GetDefaultConfigDir()
-	fmt.Printf("DEBUG: appConfigDir = %v\n", appConfigDir)
 
 	_ = createConfigFile()
 
