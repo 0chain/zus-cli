@@ -28,7 +28,6 @@ var (
 	walletClientKey string
 	cDir            string
 	nonce           int64
-	txFee           float64
 	bSilent         bool
 	// gTxnFee is the user specified fee passed from client/user.
 	// If the fee is absent/low it is adjusted to the min fee required
@@ -67,7 +66,6 @@ func init() {
 	rootCmd.PersistentFlags().Int64Var(&nonce, "withNonce", 0, "nonce that will be used in transaction (default is 0)")
 	rootCmd.PersistentFlags().StringVar(&cDir, "configDir", "", "configuration directory")
 	rootCmd.PersistentFlags().BoolVar(&bSilent, "silent", false, "(default false) Do not show interactive sdk logs (shown by default)")
-	rootCmd.PersistentFlags().Float64Var(&txFee, "fee", 0, "transaction fee for the given transaction (if unset, it will be set to blockchain min fee)")
 	rootCmd.PersistentFlags().Float64Var(&gTxnFee, "fee", 0, "transaction fee for the given transaction (if unset, it will be set to blockchain min fee)")
 }
 
@@ -259,7 +257,7 @@ func initConfig() {
 		cfg.SignatureScheme,
 		nonce,
 		false, true,
-		int(zcncore.ConvertToValue(txFee)),
+		int(zcncore.ConvertToValue(gTxnFee)),
 	); err != nil {
 		fmt.Println("Error in sdk init", err)
 		os.Exit(1)
