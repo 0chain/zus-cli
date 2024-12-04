@@ -51,13 +51,13 @@ var rootCmd = &cobra.Command{
 	Short: "zus-cli is a decentralized storage application written on the 0Chain platform",
 	Long: `zus-cli is a decentralized storage application written on the 0Chain platform.
 			Complete documentation is available at https://docs.zus.network/guides/zbox-cli`,
+	PersistentPreRun: initCmdContext,
 }
 
 func init() {
 
 	InstallDLLs()
 
-	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "config.yaml", "config file (default is config.yaml)")
 	rootCmd.PersistentFlags().StringVar(&networkFile, "network", "network.yaml", "network file to overwrite the network details (if required, default is network.yaml)")
 	rootCmd.PersistentFlags().StringVar(&walletFile, "wallet", "wallet.json", "wallet file (default is wallet.json)")
@@ -220,7 +220,7 @@ func createConfigFile() error {
 	return nil
 }
 
-func initConfig() {
+func initCmdContext(cmd *cobra.Command, args []string) {
 
 	_ = createConfigFile()
 
@@ -240,6 +240,10 @@ func initConfig() {
 	if err != nil {
 		fmt.Println("error initializing SDK: ", err)
 		os.Exit(1)
+	}
+
+	if _, ok := withoutWalletCmds[cmd]; ok {
+		return
 	}
 
 	// load wallet info
@@ -266,18 +270,8 @@ func initConfig() {
 	sdk.SetNumBlockDownloads(10)
 }
 
-// WithoutZCNCore zcncore package is unnecessary for this command. it will be asked to initialize zcncore via zcncore.Init
-func WithoutZCNCore(c *cobra.Command) *cobra.Command {
-	withoutZCNCoreCmds[c] = true
-	return c
-}
-
 // WithoutWallet wallet information is unnecessary for this command. ~/.zcn/wallet.json will not be checked
 func WithoutWallet(c *cobra.Command) *cobra.Command {
 	withoutWalletCmds[c] = true
 	return c
-}
-
-func getTxnFee() uint64 {
-	return zcncore.ConvertToValue(gTxnFee)
 }
