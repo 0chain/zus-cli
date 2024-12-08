@@ -52,7 +52,7 @@ var recoverwalletcmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(WithoutZCNCore(WithoutWallet(recoverwalletcmd)))
+	rootCmd.AddCommand(WithoutWallet(recoverwalletcmd))
 	recoverwalletcmd.PersistentFlags().String("mnemonic", "", "mnemonic")
 	recoverwalletcmd.PersistentFlags().Bool("offline", false, "recover wallet without registration on blockchain")
 	recoverwalletcmd.MarkFlagRequired("mnemonic")

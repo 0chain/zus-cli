@@ -183,17 +183,14 @@ var downloadCmd = &cobra.Command{
 			for i := 0; i < waitTimes; i++ {
 				err := <-statusBar.CmdErr
 				if err != nil {
-					util.PrintError("Multidownload error ", i+1, " : ", err)
+					// util.PrintError("Multidownload error ", i+1, " : ", err)
+					os.Exit(1)
 				}
 			}
 		} else {
 			util.PrintError("Download failed.", errE.Error())
 			os.Exit(1)
 		}
-		// if errE != nil {
-		// 	util.PrintError(errE)
-		// 	os.Exit(1)
-		// }
 
 	},
 }

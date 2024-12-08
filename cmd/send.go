@@ -52,7 +52,7 @@ var sendcmd = &cobra.Command{
 		desc := cmd.Flag("desc").Value.String()
 
 		tokens := zcncore.ConvertToValue(tokenZCN)
-		fee := getTxnFee()
+		fee := zcncore.ConvertToValue(gTxnFee)
 		if fee > 0 {
 			checkBalanceBeforeSend(tokens, fee)
 		}
