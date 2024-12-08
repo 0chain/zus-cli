@@ -71,6 +71,18 @@ var uploadCmd = &cobra.Command{
 	},
 }
 
+type chunkedUploadArgs struct {
+	localPath     string
+	remotePath    string
+	thumbnailPath string
+
+	encrypt      bool
+	webStreaming bool
+	chunkNumber  int
+	isUpdate     bool
+	isRepair     bool
+}
+
 type MultiUploadOption struct {
 	FilePath       string `json:"filePath,omitempty"`
 	FileName       string `json:"fileName,omitempty"`
@@ -120,11 +132,7 @@ func singleUpload(allocationObj *sdk.Allocation, localPath, remotePath, thumbnai
 		},
 	}
 
-	// workdir := util.GetHomeDir()
-	workdir, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
+	workdir := util.GetHomeDir()
 
 	return multiUploadWithOptions(allocationObj, workdir, options)
 }
@@ -140,6 +148,7 @@ func multiUploadWithOptions(allocationObj *sdk.Allocation, workdir string, optio
 	isUpdates := make([]bool, totalUploads)
 	isWebstreaming := make([]bool, totalUploads)
 	for idx, option := range options {
+		// statusBar.wg.Add(1)
 		filePaths[idx] = option.FilePath
 		fileNames[idx] = option.FileName
 		thumbnailPaths[idx] = option.ThumbnailPath
