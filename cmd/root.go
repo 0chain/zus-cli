@@ -260,7 +260,7 @@ func initCmdContext(cmd *cobra.Command, args []string) {
 		cfg.ChainID,
 		cfg.SignatureScheme,
 		nonce,
-		false, true,
+		true,
 		int(zcncore.ConvertToValue(gTxnFee)),
 	); err != nil {
 		fmt.Println("Error in sdk init", err)
